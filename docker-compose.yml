@@ -1,0 +1,91 @@
+services:
+  rs0_mongo1:
+    container_name: rs0_mongo1
+    image: mongo:8.0
+    volumes:
+      - rs0_mongo1_data:/data/db
+      - rs0_mongo1_config:/data/configdb
+      - ./scripts/mongo-rs-init.sh:/scripts/mongo-rs-init.sh
+      - ./mongo_rs_keyfile:/etc/mongodb/pki/keyfile
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: use_a_strong_password
+    ports:
+      - '23456:23456'
+    networks:
+      - rs0-mongo-network
+    command:
+      [
+        'mongod',
+        '--replSet',
+        'rs0',
+        '--bind_ip_all',
+        '--keyFile',
+        '/etc/mongodb/pki/keyfile',
+        '--port',
+        '23456',
+      ]
+
+  rs0_mongo2:
+    container_name: rs0_mongo2
+    image: mongo:8.0
+    volumes:
+      - rs0_mongo2_data:/data/db
+      - rs0_mongo2_config:/data/configdb
+      - ./mongo_rs_keyfile:/etc/mongodb/pki/keyfile
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: use_a_strong_password
+    ports:
+      - '23457:23457'
+    networks:
+      - rs0-mongo-network
+    command:
+      [
+        'mongod',
+        '--replSet',
+        'rs0',
+        '--bind_ip_all',
+        '--keyFile',
+        '/etc/mongodb/pki/keyfile',
+        '--port',
+        '23457',
+      ]
+
+  rs0_mongo3:
+    container_name: rs0_mongo3
+    image: mongo:8.0
+    volumes:
+      - rs0_mongo3_data:/data/db
+      - rs0_mongo3_config:/data/configdb
+      - ./mongo_rs_keyfile:/etc/mongodb/pki/keyfile
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: use_a_strong_password
+    ports:
+      - '23458:23458'
+    networks:
+      - rs0-mongo-network
+    command:
+      [
+        'mongod',
+        '--replSet',
+        'rs0',
+        '--bind_ip_all',
+        '--keyFile',
+        '/etc/mongodb/pki/keyfile',
+        '--port',
+        '23458',
+      ]
+
+networks:
+  rs0-mongo-network:
+    driver: bridge
+
+volumes:
+  rs0_mongo1_data:
+  rs0_mongo2_data:
+  rs0_mongo3_data:
+  rs0_mongo1_config:
+  rs0_mongo2_config:
+  rs0_mongo3_config:
